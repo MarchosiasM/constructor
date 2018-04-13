@@ -4,17 +4,15 @@ const Letter = require("./Letter");
 
 class Word {
     constructor(word) {
+        this._word = word;
         this.value = word.split('');
-        // console.log(this.value);
         this.letters = [];
         for (var letter in this.value) {
             let placeHolder = new Letter(this.value[letter]);
             this.letters.push(placeHolder);
         }
-        console.log(this.letters);
         this.showString = [];
         this.guessed = false;
-        this.goodjob = false;
         this.found = 0;
     }
 
@@ -24,8 +22,10 @@ class Word {
             let bucket = this.letters[letter].getValue();
             this.showString.push(bucket);
         }
-        console.log(this.showString.join(''));
         return this.showString.join('');
+    }
+    getFullWord() {
+        return this._word;
     }
     testLetter(testInput, tries) {
         this.found = 0;
@@ -35,25 +35,29 @@ class Word {
                 this.found++
             }
         }
-        if (this.found > 0 ) {
-            console.log(`Found ${this.found} instances.`)
+        if (this.found > 0) {
+            console.log(`Congratulations!! Found ${this.found} instances.`)
+            this.isDone();
+
             return tries;
         } else {
             tries = (tries - 1)
             console.log(`Letter not found, ${tries} tries left.`)
             return tries;
         }
+    }
 
+    isDone() {
+        for (var letter in this.letters) {
+            if (!this.letters[letter].show) {
+                this.guessed = false;
+                break;
+            } else {
+                this.guessed = true;
+            }
+        }
     }
 }
 
-// let tom = new Word("But what about a bunch of words");
-// tom.getWord();
-// tom.testLetter('a');
-// tom.testLetter('b');
-// tom.testLetter('x');
-// tom.testLetter('w')
-// tom.testLetter('b')
-// tom.getWord();
 
 module.exports = Word;
